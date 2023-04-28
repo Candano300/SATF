@@ -41,7 +41,7 @@ vector<vector<double> >* input;
 
 int interface(){
     string s;
-    vector<string > commands = {"col", "tree", "q"};
+    vector<string > commands = {"tree", "q"};
 
 
     while (true){
@@ -57,19 +57,25 @@ int interface(){
     if (s == "q"){
         return 0;
     }
-    if(s == "col") {
-        fn.reader();
 
-    }
     if(s=="tree"){
-        output = fn.reader();
-        if (output.size() != 0){
-            cout << YELLOW "Enter a name for the output file: " RESET << flush;
-            string filename; 
-            getline(cin,filename);
-            fn.outputToTree(isRoot(filename),&output);
+        ifstream *file = new ifstream;
+        string s;
+        cout <<  YELLOW "Enter the full path of the data file: " RESET << "\n";
+             << YELLOW "> " RESET << flush;
+        getline(cin, s);
+        file->open(s);
+        if (!file->is_open()) {
+            cout << RED << "ERROR: Could not open the file." << RESET << endl;
+        }else {
+            output = fn.reader(*file);
+            if (output.size() != 0){
+                cout << YELLOW "Enter a name for the output file: " RESET << flush;
+                string filename; 
+                getline(cin,filename);
+                fn.outputToTree(isRoot(filename),&output);
+            } 
         }
-
     }
 
     interface();
