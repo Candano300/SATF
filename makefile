@@ -2,7 +2,7 @@ CXX = $(shell root-config --cxx)
 FLAGS = $(shell root-config --cflags) -O2 -Wall -Wextra
 LIBS = $(shell root-config --libs)
 ARCH = x86_64
-SOURCES = ./main/functions.cpp ./main/interface.cpp ./main/main.cpp
+SOURCES = ./main/functions.cpp ./main/interface.cpp ./main/main.cpp ./main/utilities.cpp
 PROGRAM = satforce
 YELLOW = \033[1;33m
 CYAN = \033[1;36m
@@ -28,3 +28,4 @@ clean:
 again: 
 	@make clean
 	@make
+	@make run

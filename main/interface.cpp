@@ -27,7 +27,9 @@ cout << BOLDORANGE << "\n"
          "Commands" << "\n"
          "   q    : exit"                         << "\n" 
          "   col  : extract .tsv file as vectors"  << "\n"
-         "   root : create a .root file from col" << "\n"
+         "   /Users/Hazal/Desktop/sat-force/workspace/project/tests/test_6.txt" << "\n"
+         "   tree : create a .root file from col" << "\n"
+         
          << RESET << endl; 
 };
 
@@ -38,31 +40,42 @@ vector<vector<double> >* input;
 
 
 int interface(){
-    greetings();
     string s;
-    vector<string > commands = {"col", "root", "q"};
+    vector<string > commands = {"col", "tree", "q"};
 
 
     while (true){
-        cout << "> "  << flush;
+        cout << YELLOW "> " RESET << flush;
         getline(cin, s); 
         if (find(commands.begin(), commands.end(), s) != commands.end()){
             break;
         } else {
-            cout << RED << " Invalid command." << RESET << endl;
+            cout << RED << "ERROR: Invalid command." << RESET << endl;
         }
     }
-
+    
     if (s == "q"){
         return 0;
     }
     if(s == "col") {
+        fn.columns();
+
+    }
+    if(s=="tree"){
         output = fn.columns();
-        input= &output;
+        if (output.size() != 0){
+            input= &output; // input is now equal to the adress of output
+            string filename;
+            cout << YELLOW "Enter a name for the output file: " RESET << flush;
+            getline(cin,filename);
+            string fileinput;
+            fileinput = isRoot(filename);
+            fn.outputToTree(fileinput,input);
+        }
+
     }
-    if(s=="root"){
-        fn.outputToTree("output.root",input);
-    }
+
+    interface();
 
 
     return 0;
