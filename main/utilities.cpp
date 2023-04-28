@@ -8,7 +8,11 @@ using namespace std;
 string isRoot(string nameofthefile){
     string extension = nameofthefile.substr(nameofthefile.length() - 5);
     if(extension != ".root"){
-        nameofthefile = nameofthefile + ".root";
+        if(extension == ""){
+            nameofthefile = "output.root";
+        }else{
+            nameofthefile = nameofthefile + ".root";
+        }
     }
     return nameofthefile;
 }

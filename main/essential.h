@@ -48,7 +48,7 @@
 
 class functions{
 public: 
-    std::vector<std::vector<double> > columns();
+    std::vector<std::vector<double> > reader();
     void outputToTree(std::string output_file, const std::vector<std::vector<double>>* input);
 };
 

@@ -58,19 +58,16 @@ int interface(){
         return 0;
     }
     if(s == "col") {
-        fn.columns();
+        fn.reader();
 
     }
     if(s=="tree"){
-        output = fn.columns();
+        output = fn.reader();
         if (output.size() != 0){
-            input= &output; // input is now equal to the adress of output
-            string filename;
             cout << YELLOW "Enter a name for the output file: " RESET << flush;
+            string filename; 
             getline(cin,filename);
-            string fileinput;
-            fileinput = isRoot(filename);
-            fn.outputToTree(fileinput,input);
+            fn.outputToTree(isRoot(filename),&output);
         }
 
     }
