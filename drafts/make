@@ -1,0 +1,21 @@
+$(OUTPUT): $(SOURCE)
+	@echo "\033[1;33mCompiling...\033[0m"  
+	@$(CC) -o $@ $< $(FLAGS) 
+	@echo "\033[1;32mDone. \033[0m "
+	@echo "\033[1;32mEnter the prompt \033[0m\033[1;36m./$<\033[0m\033[1;32m or \033[0m\033[1;36mmake run\033[0m\033[1;32m to execute the program. \033[0m"
+
+run: 
+	@./$(OUTPUT)
+
+clean: 
+	@rm -rf $(OUTPUT)
+	@echo "\033[1;31m$ $(OUTPUT) is deleted. \033[0m"
+
+again:
+	@rm -rf $(OUTPUT)
+	@$(CC) $(FLAGS) -o $(OUTPUT) $(SOURCE)
+	
+	
+
+
+
