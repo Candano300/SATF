@@ -26,7 +26,6 @@ cout << BOLDORANGE << "\n"
          cout << YELLOW << 
          "Commands" << "\n"
          "   q    : exit"                         << "\n" 
-         "   col  : extract .tsv file as vectors"  << "\n"
          "   /Users/Hazal/Desktop/sat-force/workspace/project/tests/test_6.txt" << "\n"
          "   tree : create a .root file from col" << "\n"
          
@@ -61,12 +60,12 @@ int interface(){
     if(s=="tree"){
         ifstream *file = new ifstream;
         string s;
-        cout <<  YELLOW "Enter the full path of the data file: " RESET << "\n";
-             << YELLOW "> " RESET << flush;
+        cout <<  YELLOW "Enter the full path of the data file: " RESET "\n"
+             <<  "> " RESET << flush;
         getline(cin, s);
         file->open(s);
         if (!file->is_open()) {
-            cout << RED << "ERROR: Could not open the file." << RESET << endl;
+            cout << RED "ERROR: Could not open the file." RESET << endl;
         }else {
             output = fn.reader(*file);
             if (output.size() != 0){
