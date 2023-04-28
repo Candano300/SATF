@@ -4,19 +4,10 @@
 using namespace std;
 
 
-void functions::greetings(){
-    cout << "\n" << endl;    
-    cout << WHITE << "SAT-FORCE SIGNAL ANALYSIS" << RESET << endl; 
-    cout << YELLOW << "(Enter \"q\" to exit the program)" << RESET << endl; 
-    cout << "" << endl;
-
-};
-
 vector<vector<double> > functions::columns() {
     string input;
     string line;
     vector<vector<string> > matrix;
-    vector<vector<double> > transpose;
     vector<vector<double> > empty;
     ifstream file;
     int n_rows = 0;
@@ -26,10 +17,6 @@ vector<vector<double> > functions::columns() {
         cout << "Enter the full path of the data file: " << endl;
         cout << "> " << flush;
         getline(cin, input);
-
-        if (input == "q") {
-            return empty;
-        }
        
         file.open(input);
         if (!file.is_open()) {
@@ -56,20 +43,19 @@ vector<vector<double> > functions::columns() {
 
     file.close();
 
-    transpose.resize(n_columns, vector<double>(n_rows));
+    vector<vector<double> > transpose(n_columns, vector<double>(n_rows));
 
-    for (int i = 0; i < n_columns; i++) {
-        for (int j = 0; j < n_rows; j++) {
+    for (int i = 0; i < n_columns; i++){
+        for (int j = 0; j < n_rows; j++){
             transpose[i][j] = stof(matrix[j][i]);
         }
     }
 
-    cout << WHITE << "The number of rows: " << RESET << n_rows << endl;
+    cout << WHITE << "The number of rows: "    << RESET << n_rows << endl;
     cout << WHITE << "The number of columns: " << RESET << n_columns << endl;
 
     return transpose;
 };
-
 
 void functions::outputToTree(const char* output_file, const vector<vector<double>>* input) {
     TFile* file = new TFile(output_file, "RECREATE");
