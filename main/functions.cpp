@@ -3,19 +3,17 @@
 
 using namespace std;
 
-//columns returns transpose 
-vector<vector<double> > functions::reader(ifstream &myfile) {
-    // Some variables
+
+vector<vector<double> > functions::reader(ifstream &thefile) {
     string input;
     string line;
     vector<vector<string> > matrix;
     vector<vector<double> > empty;
-    ifstream file;
     int n_rows = 0;
     int n_columns = 0;
 
 
-    while (getline(myfile, line)) {
+    while (getline(thefile, line)) {
 
         istringstream ss(line);
         string element;
@@ -31,13 +29,13 @@ vector<vector<double> > functions::reader(ifstream &myfile) {
         }
     }
 
-    myfile.close();
+    thefile.close();
 
     // Transpose the matrix:
     vector<vector<double> > transpose(n_columns, vector<double>(n_rows));
     for (int i = 0; i < n_columns; i++){
         for (int j = 0; j < n_rows; j++){
-            transpose[i][j] = stof(matrix[j][i]);
+            transpose[i][j] = stof(matrix[j][i]); // convert string to float
         }
     }
 
@@ -49,28 +47,17 @@ vector<vector<double> > functions::reader(ifstream &myfile) {
 };
 
 void functions::outputToTree(string output_file, const vector<vector<double>>* input) {
+    char cwd[1024];
+    getcwd(cwd, sizeof(cwd));
+
+    string outputpath_str = string(cwd) + "/outputs/" + output_file ;
+    const char *outputpath = (outputpath_str).c_str();
+    cout << outputpath << endl;
 
 
-    //----------PRELIMINARIES----------//
-
-    // Get back to this if statement later. Since there is also an if statement in the interface.cpp
-    //  one of them is unnecessary.
-
-    if (input->empty()) {
-        cout << RED << "outputToTree_ERROR: No input." << RESET << endl;
-        return;
-    }
-
-    //convert output_file to const* char SignalTree =  &
-    TString currentpath = gDirectory -> GetPath();
-    string output_path = string(currentpath.Data()) + "/outputs/" + output_file;
-    cout << currentpath << endl;
-    const char *SignalTree = output_path.c_str();
-
-    // --------------------------------//
 
     // Macro begins here:
-    TFile  *file = new TFile(SignalTree, "RECREATE");
+    TFile  *file = new TFile(outputpath, "RECREATE");
     TTree  *signaltree = new TTree("tree", "Signal Tree");
 
 
@@ -97,12 +84,6 @@ void functions::outputToTree(string output_file, const vector<vector<double>>* i
     file->Write();
     file->Close();
     
-    cout << GREEN << "Successfully output data to tree!" << RESET << endl;
-
-
-    
-    
-
 }
 
  

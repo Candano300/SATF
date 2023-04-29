@@ -34,14 +34,10 @@ cout << BOLDORANGE << "\n"
 
 
 functions fn; 
-vector<vector<double> > output;
-vector<vector<double> >* input; 
-
 
 int interface(){
+    vector<string > commands = {"tree", "q"}; // list of commands
     string s;
-    vector<string > commands = {"tree", "q"};
-
 
     while (true){
         cout << YELLOW "> " RESET << flush;
@@ -64,15 +60,16 @@ int interface(){
              <<  "> " RESET << flush;
         getline(cin, s);
         file->open(s);
-        if (!file->is_open()) {
+        if (! file->is_open() ) {
             cout << RED "ERROR: Could not open the file." RESET << endl;
         }else {
-            output = fn.reader(*file);
+            vector<vector<double> > output = fn.reader(*file);
             if (output.size() != 0){
                 cout << YELLOW "Enter a name for the output file: " RESET << flush;
                 string filename; 
                 getline(cin,filename);
-                fn.outputToTree(isRoot(filename),&output);
+                fn.outputToTree(isRoot(filename), &output);
+                cout << GREEN "Successfully output data to tree!" RESET << endl;
             } 
         }
     }

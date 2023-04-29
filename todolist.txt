@@ -1,6 +1,6 @@
 TO DO LIST
  - when asking for the output file, add the .root extension automatically if it is not defined - DONE
- - should I make the tree function and column transpose function seperate? 
+ - should I make the tree function and column transpose function seperate? - DONE
  - tree function should abort if the input file path is not eligible - DONE
  - make a list of errors and call the errors when needed instead of writing them one by one in each function?
  - it has to check whether the input file is COMPLETELY eligible! 

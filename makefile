@@ -9,7 +9,7 @@ CYAN = \033[1;36m
 GREEN = \033[1;32m
 RESET = \033[0m
 
-all: $(PROGRAM)
+all: clean $(PROGRAM) run 
 
 $(PROGRAM): $(SOURCES)
 	@echo "$(YELLOW)Compiling...$(RESET)"
