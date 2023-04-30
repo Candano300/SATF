@@ -30,7 +30,7 @@
 
 #endif
 
-// ROOT LIBRARIES
+// ROOT HEADERS
 
 #ifndef rooth
 #define rooth
@@ -40,6 +40,14 @@
 #include "TTree.h"
 #include <TMath.h>
 #include "TString.h"
+#include "TCanvas.h"
+#include "TGraph.h"
+#include "TApplication.h"
+#include "TBrowser.h"
+#include "TROOT.h"
+#include "TH1F.h"
+#include "TFrame.h"
+
 
 
 #endif
@@ -54,6 +62,7 @@ class functions{
 public: 
     std::vector<std::vector<double> > reader(std::ifstream &myfile);
     void outputToTree(std::string output_file, const std::vector<std::vector<double>>* input);
+    void graph(std::vector<std::vector<double > > input);
 };
 
 
@@ -63,5 +72,5 @@ public:
 int interface();
 void greetings();
 
-// DEFINITIONS FOR SMALL THINGS
+// UTILITIES
 std::string isRoot(std::string s);

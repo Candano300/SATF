@@ -34,48 +34,56 @@ cout << BOLDORANGE << "\n"
 
 
 functions fn; 
+ifstream *file = new ifstream;
 
-int interface(){
-    vector<string > commands = {"tree", "q"}; // list of commands
+
+
+int interface() {
+    vector<string> commands = {"tree", "graph", "q"}; // list of commands
     string s;
 
-    while (true){
+    while (true) {
         cout << YELLOW "> " RESET << flush;
-        getline(cin, s); 
-        if (find(commands.begin(), commands.end(), s) != commands.end()){
-            break;
-        } else {
-            cout << RED << "ERROR: Invalid command." << RESET << endl;
-        }
-    }
-    
-    if (s == "q"){
-        return 0;
-    }
-
-    if(s=="tree"){
-        ifstream *file = new ifstream;
-        string s;
-        cout <<  YELLOW "Enter the full path of the data file: " RESET "\n"
-             <<  "> " RESET << flush;
         getline(cin, s);
-        file->open(s);
-        if (! file->is_open() ) {
-            cout << RED "ERROR: Could not open the file." RESET << endl;
-        }else {
-            vector<vector<double> > output = fn.reader(*file);
-            if (output.size() != 0){
+
+        if (find(commands.begin(), commands.end(), s) == commands.end()) {
+            cout << RED "ERROR: Invalid command." RESET << endl;
+            continue; 
+        }
+
+        if (s == "q") {
+            return 0;
+        }
+
+        if (s == "tree") {
+            string filename;
+            cout << YELLOW "Enter the full path of the data file: " RESET << flush;
+            getline(cin, filename);
+
+            file->open(filename);
+
+            if (!file->is_open()) {
+                cout << RED "ERROR: Could not open the file." RESET << endl;
+                continue; 
+            }
+
+            vector<vector<double>> output = fn.reader(*file);
+
+            if (output.size() != 0) {
                 cout << YELLOW "Enter a name for the output file: " RESET << flush;
-                string filename; 
-                getline(cin,filename);
+                getline(cin, filename);
+
                 fn.outputToTree(isRoot(filename), &output);
-                cout << GREEN "Successfully output data to tree!" RESET << endl;
-            } 
+                cout << GREEN "Successfully output data to n-tuples!" RESET << endl;
+            }
+        }
+
+        if (s == "graph") {
+            file->open("/Users/Hazal/Desktop/sat-force/workspace/project/tests/test_6.txt");
+            vector<vector<double>> output = fn.reader(*file);
+            fn.graph(output);
         }
     }
-
-    interface();
-
 
     return 0;
 };

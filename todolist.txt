@@ -1,7 +1,15 @@
 TO DO LIST
- - when asking for the output file, add the .root extension automatically if it is not defined - DONE
- - should I make the tree function and column transpose function seperate? - DONE
- - tree function should abort if the input file path is not eligible - DONE
+ - when asking for the output file, add the .root extension automatically if it is not defined / DONE
+ - should I make the tree function and column transpose function seperate? / DONE
+ - tree function should abort if the input file path is not eligible / DONE
  - make a list of errors and call the errors when needed instead of writing them one by one in each function?
- - it has to check whether the input file is COMPLETELY eligible! 
- - the output.root files should be saved to a special file (make it tidy) 
+ - it has to check whether the input file is COMPLETELY eligible, i.e. if it is a true data file or 
+    the wrong file. The code aborts if it is not a true data file. 
+ - the output.root files should be saved to a special file (make it tidy) / DONE
+    - create the "outputs" directory within the program if it does not exist. 
+- maybe the interface should ask the path of the datafile as default, then give you the list of commands
+    since all the commands require the path first? 
+    - make the output "transpose" vector a private variable within the class.
+    - add a reset function if the user wants to add another file  
+- maybe make it so that it can store the past files paths and the user does not have to work with pasting
+    the path again

@@ -6,13 +6,14 @@ using namespace std;
 // add .root extension to the end of the input.
 
 string isRoot(string nameofthefile){
-    string extension = nameofthefile.substr(nameofthefile.length() - 5);
-    if(extension != ".root"){
-        if(extension == ""){
-            nameofthefile = "output.root";
-        }else{
-            nameofthefile = nameofthefile + ".root";
+    // Get back here later: 
+    //str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
+    if(nameofthefile != ""){
+        string extension = nameofthefile.substr(nameofthefile.length() - 5);
+        if(extension != ".root"){
+            return nameofthefile + ".root";
         }
     }
-    return nameofthefile;
+    return "signal_tree.root" ;
+
 }

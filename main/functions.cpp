@@ -69,7 +69,7 @@ void functions::outputToTree(string output_file, const vector<vector<double>>* i
 
     // create branches
     for (int i = 0; i < n_columns; i++) {
-        string branch_name = "branch_" + to_string(i);
+        string branch_name = "branch_" + to_string(i+1);
         signaltree->Branch(branch_name.c_str(), &output_row[i]);
     }
 
@@ -86,7 +86,50 @@ void functions::outputToTree(string output_file, const vector<vector<double>>* i
     
 }
 
- 
+void functions::graph(vector<vector<double > > input ){
+    //TApplication *myApp = new TApplication("myApp",0,0);
+
+
+    TCanvas *c1 = new TCanvas("c1", "Graph Draw Options", 200, 10, 600, 400);
+    c1-> SetGrid();
+
+    int nPoints = input[0].size();
+    vector<double> x ;
+    for (int i = 0; i <= nPoints; i++){
+    x.push_back(i*2.5e-91);
+    }
+
+
+    double size = input.size();
+    int j = 1;
+    cout << (to_string(j+1)) << endl;
+
+    vector<double> y = input[j];
+    TGraph *graph = new TGraph(nPoints, &x[0], &y[0]);
+    
+    graph->GetXaxis()->SetTitle("Time (s)");
+    graph->GetYaxis()->SetTitle("Voltage (V)");
+    graph->SetMarkerStyle(8);
+    graph->SetMarkerColor(kBlue);
+    graph->SetMarkerSize(0.7);
+    graph->SetLineColor(kBlue);
+    graph->SetLineWidth(3);
+    graph->SetTitle(Form("Voltage vs. Time (Column No. %d) ", j+1));
+
+
+    graph->Draw("ACP");
+
+
+    
+    c1->Draw();
+    c1->SaveAs("example.png");
+
+
+    //myApp->Run();
+
+}
+
+         
 
 
 
