@@ -8,8 +8,8 @@ TO DO LIST
  - the output.root files should be saved to a special file (make it tidy) / DONE
     - create the "outputs" directory within the program if it does not exist. 
 - maybe the interface should ask the path of the datafile as default, then give you the list of commands
-    since all the commands require the path first? 
+    since all the commands require the path first? Therefore: 
     - make the output "transpose" vector a private variable within the class.
-    - add a reset function if the user wants to add another file  
+    - add a reset function to the interface if the user wants to add another file  
 - maybe make it so that it can store the past files paths and the user does not have to work with pasting
     the path again

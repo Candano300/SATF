@@ -26,6 +26,9 @@
 #include <string>
 #include <vector>
 #include <unistd.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <signal.h>
 
 
 #endif
@@ -47,8 +50,8 @@
 #include "TROOT.h"
 #include "TH1F.h"
 #include "TFrame.h"
-
-
+#include "TSystem.h"
+#include "TStyle.h"
 
 #endif
 

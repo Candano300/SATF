@@ -72,7 +72,7 @@ int interface() {
             if (output.size() != 0) {
                 cout << YELLOW "Enter a name for the output file: " RESET << flush;
                 getline(cin, filename);
-
+                
                 fn.outputToTree(isRoot(filename), &output);
                 cout << GREEN "Successfully output data to n-tuples!" RESET << endl;
             }
