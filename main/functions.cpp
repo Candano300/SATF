@@ -87,65 +87,102 @@ void functions::outputToTree(string output_file, const vector<vector<double>>* i
 }
 
 void functions::graph(vector<vector<double> > input) {
+
     pid_t pid = fork();
     
-
-    if (pid == 0) {    
     TApplication *myApp = new TApplication("myApp", 0, 0);
+    TFile *f = new TFile(initializepath("graph.c"), "RECREATE");
 
+    
 
+    // parent    
+    if (pid > 0){ 
 
-    int nPoints = input[0].size();
-    vector<double> x(nPoints);
-    for (int i = 0; i < nPoints; i++) {
-        x[i] = i * 2.5e-9;
-    }
-    int no_of_columns = int(input.size());
-
-    for (int j = 0; j < no_of_columns; j++) {
-    //int j = 0;
-    //while(j<no_of_columns){
-        vector<double> y = input[j];
-        string canvasname = "c" + to_string(j);
-        string canvas = "Graph_" + to_string(j+1);
-        TCanvas *c1 = new TCanvas(canvasname.c_str(), canvas.c_str(), 200, 10, 600, 400);
-        c1->SetGrid();
-        TGraph *graph = new TGraph(nPoints, &x[0], &y[0]);
-        
-
-        graph->GetXaxis()->SetTitle("Time (s)");
-        graph->GetYaxis()->SetTitle("Voltage (V)");
-        graph->SetMarkerStyle(8);
-        graph->SetMarkerColor(kBlue);
-        graph->SetMarkerSize(0.7);
-        graph->SetLineColor(kBlue);
-        graph->SetLineWidth(3);
-        graph->SetTitle(Form("Voltage vs. Time (Column No. %d) ", j + 1));
-        
-        graph->Draw("ACP");
-
-
-
-        c1->Draw();
-        gStyle->SetOptFit(1111);
-        //j++;
-    }
-
-
-        cout << YELLOW "Press enter to exit TBrowser" RESET << endl;
-        myApp->Run();     
-    }else if (pid > 0){
-
-        // Parent process
-        // Wait for user input to stop the child process
-        
-        getchar();
-
-        // Send a signal to the child process to stop
-        kill(pid, SIGTERM);
-
-        // Wait for the child process to terminate
+        cout << "Save? (y/n)" << endl;
+        string save;
+        getline(cin,save);
+        if (save == "y") {
+        f->Write();
+        f->Close();
+        cout << "File saved succesfully" << endl;
+        }
 
     }
+        
+
+
+    //child
+    if (pid == 0){ 
+
+        int no_of_datas = input[0].size();
+        vector<double> x(no_of_datas);
+        for (int i = 0; i < no_of_datas; i++) {
+            x[i] = i * 2.5e-9;
+        }
+        
+        int no_of_datasets = int(input.size());
+        for (int j = 0; j < no_of_datasets; j++) {
+
+            vector<double> y = input[j];
+            string canvasname = "c" + to_string(j);
+            string canvas = "Graph_" + to_string(j+1);
+            
+            TCanvas *c1 = new TCanvas(canvasname.c_str(), canvas.c_str(), 200, 10, 600, 400);
+            c1->SetGrid();
+            TGraph *graph = new TGraph(no_of_datas, &x[0], &y[0]);
+            
+
+            graph->GetXaxis()->SetTitle("Time (s)");
+            graph->GetYaxis()->SetTitle("Voltage (V)");
+            graph->SetMarkerStyle(8);
+            graph->SetMarkerColor(kBlue);
+            graph->SetMarkerSize(0.7);
+            graph->SetLineColor(kBlue);
+            graph->SetLineWidth(3);
+
+            // title name can be an input? check
+            graph->SetTitle(Form("Voltage vs. Time (Column No. %d) ", j + 1));
+            
+            graph->Draw("ACP");
+
+
+
+            c1->Draw();
+            gStyle->SetOptFit(1111);
+            double integral = 0.0;
+            int n = graph->GetN();
+            double *x = graph->GetX();
+            double *newy = graph->GetY();
+
+            for (int i = 1; i < n; i++) {
+                double dx = x[i] - x[i-1];
+                double area = (newy[i] + newy[i-1]) * dx / 2.0;
+                integral += area;
+            };
+            cout << integral << endl;
+
+
+
+
+                      
+        }
+
+
+            myApp->Run();
+
+
+    }
+
+
+    cout << "Press any key to exit" << endl;
+    getchar();
+    kill( pid, SIGTERM);
+    cout << "Exiting..." << endl;
+
+    cout << "what now? " << endl;
+
+
+
+
 
 }
