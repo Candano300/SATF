@@ -18,39 +18,50 @@ string isRoot(string nameofthefile){
 
 }
 
-const char *initializepath(string nameofthefile){
 
+const char *initializepath(string nameofthefile){
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
-    string currentpath = string(cwd) + "/outputs/" + nameofthefile;
-    const char *currentpath_char = (currentpath).c_str();
-    return currentpath_char;
+    string outputpath = string(cwd) + "/outputs/" + nameofthefile;
+    cout << "Output: " << outputpath << endl;
+    const char *outputpath_char = (outputpath).c_str();
+    return outputpath_char;
 }
 
 
+// this will evolve into a function that scans every file within a given directory 
 string testpath(){
-
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
     string testpath = string(cwd) + "/tests/" + "test_6.txt";
+    cout << testpath << endl;
     return testpath;
 }
 
 
 // this will prepare the data file for the program to read, if not, will return a nullptr
 ifstream *open_data_file(string filename){
-    ifstream *file = new ifstream;
+    
+    
     if (filename == "q"){
         exit(0);
     }
-    file->open(filename);
 
+    if (filename == "test"){
+        filename = testpath();
+    }
+
+    
+    ifstream *file = new ifstream;
+    file->open(filename);
     if (file->is_open()) {
         return file; 
-    }
+    }else{
 
     delete file; 
     return nullptr; 
+
+    }
 
 }
 
@@ -59,10 +70,14 @@ string prompt_taker(vector<string> command_list){
     string s;
     cout << YELLOW "> " RESET << flush;
     getline(cin, s);
-
+    auto it = find(command_list.begin(), command_list.end(), s);
     if(s == "q"){
+        //the file has to be closed before quitting though.
+        //how to do that?
         exit(0);
-    }else if (find(command_list.begin(), command_list.end(), s) == command_list.end()) {
+    
+    
+    }else if ( it == command_list.end()) {
         cout << RED "ERROR: Invalid command." RESET << endl;
     }
     return s;
@@ -70,21 +85,51 @@ string prompt_taker(vector<string> command_list){
 
 
 
-void print_options(){
-        cout << YELLOW << 
-         "Commands"                                                             << "\n"
-         "   q    : exit"                                                       << "\n" 
-         "   /Users/Hazal/Desktop/sat-force/workspace/project/tests/test_6.txt" << "\n"
-         "   tree : create a .root file from col"                               << "\n"
-         
-         << RESET << endl; 
-}
+void printer(int option){
+        switch(option){
+
+        case 0: 
+                cout << BOLDORANGE << "\n"
+            << "_____________________________________________"     << "\n"      
+            << "                                             "     << "\n"    
+            << "    _____      _______            ______     "     << "\n"
+            << "   / ____|  /\\|__   __|          |  ____|   "     << "\n"
+            << "  | (___   /  \\  | |     ______  | |__      "     << "\n"
+            << "   \\___ \\ / /\\ \\ | |    |______| |  __|  "     << "\n"
+            << "   ____) / ____ \\| |             | |        "     << "\n"
+            << "  |_____/_/    \\_\\_|             |_|       "     << "\n"
+            << "                                             "     << "\n"      
+            << RESET << ORANGE 
+            << "        SAT-Force Analysis Interface         "     << "\n"
+            << RESET << BOLDORANGE
+            << "_____________________________________________"     << "\n"      
+            << RESET << endl;
+
+            break;
 
 
-void clear_line(string input){
-            std::cout << "\033[2K"; // Clear the current line
-            std::cout << "\033[1G"; // Move the cursor to the beginning of the line
-            for (int i = 0; i < int(input.length() ); i++) {
-                std::cout << "\b \b" << std::flush; // Move the cursor back and print a space to overwrite the wrong input
-            }
+
+        
+        case 1: 
+
+            cout <<  "\nENTER: \n"
+                    "- Path of the data file, or " "\"test\" to open the test file." "\n"
+                    "- \"q\" to quit" "\n" 
+                << RESET << endl;
+
+            break;
+
+        case 2:
+
+            cout << "\n" YELLOW << 
+            "Commands"                                                             << "\n"
+            "   q    : exit"                                                       << "\n" 
+            "   tree : create a .root file"                                        << "\n"
+            "   graph: display TGraphs on the screen"                              << "\n" 
+            << RESET << endl;   
+
+             break;
+
+        }
 }
+

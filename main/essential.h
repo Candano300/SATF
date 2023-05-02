@@ -30,6 +30,8 @@
 #include <unistd.h>
 #include <signal.h>
 #include <cstdlib>
+#include <iomanip>
+
 
 
 #endif
@@ -83,9 +85,9 @@ void greetings();
 std::string isRoot(std::string s); // checks whether the input is a .root file or not, if it is not it will add .root extension to the end of the input.
 const char *initializepath(std::string nameofthefile);  // returns the current path of the program
 std::string testpath(); // returns the path of the test files
-std::ifstream* open_data_file(std::string filename); // asks the user to enter the full path of the data file
+std::ifstream *open_data_file(std::string filename); // asks the user to enter the full path of the data file
 std::string prompt_taker(std::vector<std::string> command_list); // takes the input from the user and returns it as a string
-void print_options(); // prints the options
-void clear_line(std::string filename); // clears the line
+void printer(int option); // prints long things
+
 
 #endif
