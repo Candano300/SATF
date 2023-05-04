@@ -1,4 +1,4 @@
-CXX = $(shell root-config --cxx)
+CX = $(shell root-config --cxx)
 FLAGS = $(shell root-config --cflags) -O2 -Wall -Wextra
 LIBS = $(shell root-config --libs)
 ARCH = x86_64
@@ -13,12 +13,12 @@ all: clean $(PROGRAM) run
 
 $(PROGRAM): $(SOURCES)
 	@echo "$(YELLOW)Compiling...$(RESET)"
-	$(CXX) $(FLAGS) $(LIBS) -arch $(ARCH) -o $@ $^
+	$(CXX) $(FLAGS) $(LIBS) -arch $(ARCH) -o $@ $^ 
 	@echo "$(GREEN)Done!$(RESET)"
 	@echo "$(GREEN)Execute the command$(RESET) $(CYAN)./$(PROGRAM)$(RESET) $(GREEN)or$(RESET) $(CYAN)make run$(RESET) $(GREEN)to run the program.$(RESET)"
 
 run: 
-	@./$(PROGRAM)
+	@./$(PROGRAM) 
 
 
 clean:

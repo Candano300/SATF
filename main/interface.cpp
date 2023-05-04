@@ -1,20 +1,15 @@
 #include "essential.h"
 
-
 using namespace std;
 
-
-
 functions fn; 
-
-
 int interface() {
     
     ifstream *dfile;
     vector<vector<double>> output;
 
     //printer(0);
-    cout << BOLDORANGE  "\nSATF Analysis Interface" RESET << endl;
+
     printer(1);
     
     while (true){
@@ -43,8 +38,8 @@ int interface() {
                 fn.outputToTree( isRoot(filename) , &output);
                 cout << GREEN "Data is written to n-tuples succesfully" RESET << endl;
         }
-
         if (s == "graph") {
+            cout << "\n" ;
             fn.graph(output);
         }
     }

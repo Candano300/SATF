@@ -31,6 +31,7 @@
 #include <signal.h>
 #include <cstdlib>
 #include <iomanip>
+#include <algorithm>    
 
 
 
@@ -55,6 +56,7 @@
 #include "TFrame.h"
 #include "TSystem.h"
 #include "TStyle.h"
+
 
 #endif
 
