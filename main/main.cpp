@@ -36,7 +36,8 @@ int main() {
             // start a for loop that opens all the files one by one within the directory
 
             for (const auto & entry : fs::directory_iterator(filename)){
-                string file = entry.path();
+                //string file = entry.path();
+                const string& file = entry.path().string(); // this line optimizes the code I guess 
                 datafile = open_data_file(file);
                 if (datafile != nullptr) {
                     // print the name of the file
@@ -52,43 +53,43 @@ int main() {
     }
 
 
-// create the output directory 
-string path_of_output_directory = string(fs::current_path()) + "/outputs/";
-fs::create_directory(path_of_output_directory);
+    // create the output directory 
+    string path_of_output_directory = string(fs::current_path()) + "/outputs/";
+    fs::create_directory(path_of_output_directory);
 
 
-for (int i = 0; i < file_list.size(); i++){
+    for (int i = 0; i < file_list.size(); i++){
 
-    // create a directory for each file
-    string file = file_list[i];
-    string outputname = file.substr(0, file.length() - 4);
-    // get the name of the file by searching for the first "/" character, starting from the end of the string 
-    int index = outputname.find_last_of("/");
-    outputname = outputname.substr(index + 1);
-    
-    string outputpath = string(fs::current_path()) + "/outputs/" + outputname;
-    fs::create_directory(outputpath);
+        // create a directory for each file
+        string file = file_list[i];
+        string outputname = file.substr(0, file.length() - 4);
+        // get the name of the file by searching for the first "/" character, starting from the end of the string 
+        int index = outputname.find_last_of("/");
+        outputname = outputname.substr(index + 1);
+        
+        string outputpath = string(fs::current_path()) + "/outputs/" + outputname;
+        fs::create_directory(outputpath);
 
-    datafile = open_data_file(file);
-    if (datafile != nullptr) {
-        cout << "\n" GREEN "Successfully opened the file: " RESET << i << endl;
-        cout << "\n" YELLOW "File name: " << RESET << outputname << endl;
+        datafile = open_data_file(file);
+        if (datafile != nullptr) {
+            cout << "\n" GREEN "Successfully opened the file: " RESET << i << endl;
+            cout << "\n" YELLOW "File name: " << RESET << outputname << endl;
 
-        // Skipping the first 24 lines of the oscilloscope data file since it is not what we are in need of. Also, fn.reader can only read double values.
-        for (int i = 0; i < 24; ++i) {
-            string line;
-            getline(*datafile, line);
+            // Skipping the first 24 lines of the oscilloscope data file since it is not what we are in need of.
+            for (int i = 0; i < 24; ++i) {
+                string line;
+                getline(*datafile, line);
+            }
+
+            output = fn.reader(*datafile);
+            fn.graph(output, outputpath);
+
+        }else{
+        cout << RED "ERROR: Could not open the file." RESET << endl;
         }
 
-        output = fn.reader(*datafile);
-        fn.graph(output, outputpath);
 
-    }else{
-    cout << RED "ERROR: Could not open the file." RESET << endl;
     }
-
-
-}
 
     return 0;
 }

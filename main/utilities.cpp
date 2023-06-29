@@ -64,9 +64,11 @@ void printer(int option){
         << RESET << endl;
 
         cout << YELLOW << "\nENTER: \n"
-                "- Full path of the directory that contains the data files \n"
-                "OR \n"
-                "- Full path of the data file .txt \n"
+                " Full path of the directory that contains the data files \n"
+                " /path/to/your/data_directory \n"
+                " and it will iterate over all the .txt files within it. \n"
+                " You do not have to modify the .txt files. \n"
+
             << RESET << endl;
 
         break;

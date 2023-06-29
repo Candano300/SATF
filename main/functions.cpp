@@ -18,7 +18,7 @@ vector<vector<double> > functions::reader(ifstream &thefile) {
         while (ss >> element) {
             row.push_back(element);
         }
-        matrix.push_back(row);
+        matrix.push_back(std::move(row));
         n_rows++;
         if (n_columns == 0) {
             n_columns = row.size();
@@ -86,10 +86,15 @@ void functions::graph(vector<vector<double> > input , string output_path) {
         x_axis[i] = i * 2.5e-9;  // 2.5 ns is the sampling time
     }
 
-    string output_root = "/Users/Hazal/Desktop/output/test.root";
-
     //const char* newoutputpath = output_root.c_str();
     //TFile *f = new TFile(newoutputpath, "RECREATE");
+
+    peak_voltages.reserve(no_of_datasets); 
+    peak_time.reserve(no_of_datasets);
+    integrals.reserve(no_of_datasets);
+
+
+
 
 
     for (int j = 0; j < no_of_datasets; j++) { 
@@ -105,11 +110,11 @@ void functions::graph(vector<vector<double> > input , string output_path) {
         string canvasname = "c" + to_string(j);
         string canvas = "Graph_" + to_string(j+1);
         TCanvas *c1 = new TCanvas(canvasname.c_str(), canvas.c_str(), 200, 10, 600, 400);
+        TGraph  *graph = new TGraph(no_of_datas, &x_axis[0], &y_axis[0]);
         c1->SetGrid();
         c1->Draw();
 
 
-        TGraph  *graph = new TGraph(no_of_datas, &x_axis[0], &y_axis[0]);
         graph->SetTitle(Form("Voltage vs. Time  (No. %d) ", j + 1));
         graph->GetXaxis()->SetTitle("Time (s)");
         graph->GetYaxis()->SetTitle("Voltage (V)");
@@ -125,7 +130,6 @@ void functions::graph(vector<vector<double> > input , string output_path) {
 
         string output = output_path + "/graph_" + to_string(j+1) + ".root";
         c1-> SaveAs(output.c_str());
-        c1-> Delete();
 
         // find the integral of the graph via trapezoidal rule (for now):
         int     n = graph->GetN();
