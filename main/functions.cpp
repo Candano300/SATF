@@ -18,7 +18,7 @@ vector<vector<double> > functions::reader(ifstream &thefile) {
         while (ss >> element) {
             row.push_back(element);
         }
-        matrix.push_back(std::move(row));
+        matrix.push_back(row);
         n_rows++;
         if (n_columns == 0) {
             n_columns = row.size();
@@ -88,13 +88,6 @@ void functions::graph(vector<vector<double> > input , string output_path) {
 
     //const char* newoutputpath = output_root.c_str();
     //TFile *f = new TFile(newoutputpath, "RECREATE");
-
-    peak_voltages.reserve(no_of_datasets); 
-    peak_time.reserve(no_of_datasets);
-    integrals.reserve(no_of_datasets);
-
-
-
 
 
     for (int j = 0; j < no_of_datasets; j++) { 
