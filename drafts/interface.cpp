@@ -4,13 +4,16 @@ using namespace std;
 namespace fs = std::filesystem;
 functions fn; 
 
-int main() {
 
+int interface(){
+    
     ifstream *datafile;
     vector<vector<double>> output;
     vector<string> file_list; // list of files to be opened within the directory 
 
+
     printer(0);
+    printer(1);
 
     cout << YELLOW "> " RESET << flush;
     string filename;
@@ -92,3 +95,22 @@ for (int i = 0; i < file_list.size(); i++){
 
     return 0;
 }
+
+    /*
+    vector<string> commands = {"tree", "graph"}; // list of commands 
+    string s = prompt_taker(commands);
+
+    if (s == "tree") {
+            cout << YELLOW "Enter a name for the output file: " RESET << flush;
+            string outputname;
+            getline(cin, outputname);
+            fn.outputToTree(outputname , &output);
+            cout << GREEN "Data is written to n-tuples succesfully" RESET << endl;
+    }
+    if (s == "graph") {
+        cout << "\n" ;
+        fn.graph(output);
+    }
+}
+
+*/

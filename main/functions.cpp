@@ -1,8 +1,6 @@
 #include "essential.h"
 
-
 using namespace std;
-
 
 vector<vector<double> > functions::reader(ifstream &thefile) {
 
@@ -41,8 +39,9 @@ vector<vector<double> > functions::reader(ifstream &thefile) {
 
     return transpose;
 }
-void functions::outputToTree(string output_file, const vector<vector<double>> *input) {
-    const char* outputpath = initializepath(output_file);
+
+void functions::outputToTree(string output_path, const vector<vector<double>> *input) {
+    const char* outputpath = output_path.c_str();
 
 
     // Macro begins here:
@@ -68,44 +67,49 @@ void functions::outputToTree(string output_file, const vector<vector<double>> *i
         signaltree->Fill();
     }
 
+    // Save the macro and close it; 
     file->Write();
     file->Close();
     
 }
-void functions::graph(vector<vector<double> > input) {
-
-    // I had to use a parent child process in here, 
-    // myApp->Run() can't be executed otherwise. 
-    const char* outputpath = initializepath("graph.root");
-    TFile *f = new TFile(outputpath, "RECREATE");
+void functions::graph(vector<vector<double> > input , string output_path) {
 
     int no_of_datasets = int(input.size());
     vector<double> peak_voltages(no_of_datasets);
     vector<double> peak_time;
     vector<double> integrals;
 
-    pid_t pid = fork();
-
-    TApplication *myApp = new TApplication("myApp", 0, 0);
 
     int no_of_datas = input[0].size();
     vector<double> x_axis(no_of_datas); // time
     for (int i = 0; i < no_of_datas; i++) {
-        x_axis[i] = i * 2.5e-9;
+        x_axis[i] = i * 2.5e-9;  // 2.5 ns is the sampling time
     }
 
+    string output_root = "/Users/Hazal/Desktop/output/test.root";
+
+    //const char* newoutputpath = output_root.c_str();
+    //TFile *f = new TFile(newoutputpath, "RECREATE");
+
+
     for (int j = 0; j < no_of_datasets; j++) { 
+        //string output_root = "/Users/Hazal/Desktop/output/graph_" + to_string(j+1) + ".root";
+        //const char* newoutputpath = output_root.c_str();
         vector<double> y_axis = input[j]; 
         auto it = min_element(y_axis.begin(), y_axis.end());
         peak_voltages[j] = *it; // find the peak y value
         int min_index = distance(y_axis.begin(), it); 
         peak_time.push_back(x_axis[min_index]);
         //
+
         string canvasname = "c" + to_string(j);
         string canvas = "Graph_" + to_string(j+1);
         TCanvas *c1 = new TCanvas(canvasname.c_str(), canvas.c_str(), 200, 10, 600, 400);
-        TGraph  *graph = new TGraph(no_of_datas, &x_axis[0], &y_axis[0]);
+        c1->SetGrid();
+        c1->Draw();
 
+
+        TGraph  *graph = new TGraph(no_of_datas, &x_axis[0], &y_axis[0]);
         graph->SetTitle(Form("Voltage vs. Time  (No. %d) ", j + 1));
         graph->GetXaxis()->SetTitle("Time (s)");
         graph->GetYaxis()->SetTitle("Voltage (V)");
@@ -117,12 +121,13 @@ void functions::graph(vector<vector<double> > input) {
         graph->Draw("ACP");
 
 
-        c1->SetGrid();
-        c1->Draw();
         gStyle->SetOptFit(1111);
-        
 
-        // find the integral of the graph via trapezoidal rule:
+        string output = output_path + "/graph_" + to_string(j+1) + ".root";
+        c1-> SaveAs(output.c_str());
+        c1-> Delete();
+
+        // find the integral of the graph via trapezoidal rule (for now):
         int     n = graph->GetN();
         double *x = graph->GetX();
         double *y = graph->GetY();
@@ -134,9 +139,6 @@ void functions::graph(vector<vector<double> > input) {
         }
         integrals.push_back(integral); 
     }
-    if (pid == 0){
-     myApp->Run(kFALSE); // child process
-    }
 
     cout << "  Data     Integrals (Wb)      Peaks (V)      Time (s)" << "\n"
         << "--------------------------------------------------------" << endl;
@@ -144,28 +146,6 @@ void functions::graph(vector<vector<double> > input) {
     cout << setw(4) << i+1 << "       " << setw(12) << integrals[i] << "       " << setw(9) << peak_voltages[i] 
     << "       "<< setw(6) << peak_time[i] << endl;
     }
-   
-   cout << "Save? (y/n)" << endl;
-    char save;
-    cin >> save;
-    cin.ignore();
-    if (save == 'y') {
-        cout << "Saving..." << endl;
-        f->Write();
-        f->Close();
-    }
-    else {
-        cout << "Not saving..." << endl;
-    }
-   
-    cout << YELLOW "\nPress any key to close the graphs and exit to the main menu" RESET << endl;
-    getchar();
-    kill((pid_t)pid, SIGTERM);
-    cout << YELLOW "Exiting..." RESET << endl;
-
-
-
-
 
 
 

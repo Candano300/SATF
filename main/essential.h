@@ -31,7 +31,8 @@
 #include <signal.h>
 #include <cstdlib>
 #include <iomanip>
-#include <algorithm>    
+#include <algorithm>  
+#include <filesystem>
 
 
 
@@ -65,20 +66,14 @@
 #ifndef functionsh
 #define functionsh
 
-
 class functions{
 public: 
     std::vector<std::vector<double> > reader(std::ifstream &myfile);
-    void outputToTree(std::string output_file, const std::vector<std::vector<double>>* input);
-    void graph(std::vector<std::vector<double > > input);
+    void outputToTree(std::string output_path, const std::vector<std::vector<double>>* input);
+    void graph(std::vector<std::vector<double > > input , std::string output_path);
 };
 
-
 #endif
-
-// INTERFACE
-int interface();
-void greetings();
 
 // UTILITIES
 #ifndef utilitiesh
@@ -86,9 +81,7 @@ void greetings();
 
 std::string isRoot(std::string s); // checks whether the input is a .root file or not, if it is not it will add .root extension to the end of the input.
 const char *initializepath(std::string nameofthefile);  // returns the current path of the program
-std::string testpath(); // returns the path of the test files
 std::ifstream *open_data_file(std::string filename); // asks the user to enter the full path of the data file
-std::string prompt_taker(std::vector<std::string> command_list); // takes the input from the user and returns it as a string
 void printer(int option); // prints long things
 
 
