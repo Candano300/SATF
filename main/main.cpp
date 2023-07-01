@@ -27,6 +27,8 @@ int main() {
         }
         cout << RED "ERROR: Could not open the file." RESET << endl;   
     }
+
+
     // if it is not a file, then it must be a directory, start a for loop that opens all the files one by one within the directory
     else{
         
@@ -75,13 +77,15 @@ int main() {
             cout << "\n" GREEN "Successfully opened the file: " RESET << i << endl;
             cout << "\n" YELLOW "File name: " << RESET << outputname << endl;
 
-            // Skipping the first 24 lines of the oscilloscope data file since it is not what we are in need of.
+            // Skipping the first 24 lines of the oscilloscope data file since it is not what we need
             for (int i = 0; i < 24; ++i) {
                 string line;
                 getline(*datafile, line);
             }
 
             output = fn.reader(*datafile);
+
+            fn.outputToTree(outputpath, &output);
             fn.graph(output, outputpath);
 
         }else{

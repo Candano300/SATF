@@ -12,4 +12,7 @@ TO DO LIST
     - make the output "transpose" vector a private variable within the class. /nope 
     - add a reset function to the interface if the user wants to add another file  /no interface anymore
 - maybe make it so that it can store the past files paths and the user does not have to work with pasting the path again
-- open every file in a given directory and create root trees of them 
+- open every file in a given directory and create root trees of them
+- link TTree to TChain
+- use TTrees as an input for graph function
+- based on the name of the input, plot graphs together
