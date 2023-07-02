@@ -1,4 +1,5 @@
 #include "essential.h"
+#include "TF1.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -60,6 +61,8 @@ void graph(vector<vector<double> > input , string output_path) {
     vector<double> peak_voltages(no_of_datasets);
     vector<double> peak_time;
     vector<double> integrals;
+    vector<double> risetime;
+    vector<double> falltime;
 
 
     int no_of_datas = input[0].size();
@@ -71,10 +74,13 @@ void graph(vector<vector<double> > input , string output_path) {
     //const char* newoutputpath = output_root.c_str();
     //TFile *f = new TFile(newoutputpath, "RECREATE");
 
+ 
+    
 
     for (int j = 0; j < no_of_datasets; j++) { 
-        //string output_root = "/Users/Hazal/Desktop/output/graph_" + to_string(j+1) + ".root";
         //const char* newoutputpath = output_root.c_str();
+        float x_max = no_of_datas * 2.5e-9;
+
         vector<double> y_axis = input[j]; 
         auto it = min_element(y_axis.begin(), y_axis.end());
         peak_voltages[j] = *it; // find the peak y value
@@ -89,7 +95,27 @@ void graph(vector<vector<double> > input , string output_path) {
         c1->SetGrid();
         c1->Draw();
 
+	// Implementation of Burak: 
 
+        //Landau Fit:
+        float min_value = *it;
+        float scale = min_value;
+        float mu = min_index * 2.5e-9; //Location Parameter
+        float sigma = 1 * 2.5e-9; //Scale Parameter of Fit
+        TF1 *fitFcn = new TF1("fitFcn","[0]*TMath::Landau(x,[1],[2])", 0, x_max);
+        fitFcn->SetParameters(scale,mu,sigma);
+        fitFcn->SetRange(0,x_max);
+        graph->Fit("fitFcn","wR");
+
+        //Calculate Rise/Fall Time:
+        double r1 = fitFcn->GetX(min_value*0.01,0,mu);
+        double r2 = fitFcn->GetX(min_value*0.8,0,mu);
+        double l1 = fitFcn->GetX(min_value*0.8,mu,x_max);
+        double l2 = fitFcn->GetX(min_value*0.01,mu,x_max);
+        risetime.push_back(r2-r1);
+        falltime.push_back(l2-l1);
+
+        //Graph Design:
         graph->SetTitle(Form("Voltage vs. Time  (No. %d) ", j + 1));
         graph->GetXaxis()->SetTitle("Time (s)");
         graph->GetYaxis()->SetTitle("Voltage (V)");
@@ -98,34 +124,25 @@ void graph(vector<vector<double> > input , string output_path) {
         graph->SetMarkerSize(0.7);
         graph->SetLineColor(kBlue);
         graph->SetLineWidth(3);
-        graph->Draw("ACP");
-
-
+        graph->Draw("A*");
         gStyle->SetOptFit(1111);
 
+        //Save Graph as Root File:
         string output = output_path + "/graph_" + to_string(j+1) + ".root";
         c1-> SaveAs(output.c_str());
 
-        // find the integral of the graph via trapezoidal rule (for now):
-        int     n = graph->GetN();
-        double *x = graph->GetX();
-        double *y = graph->GetY();
-        double integral = 0.0;
-        for (int i = 1; i < n; i++) {
-            double dx = x[i] - x[i-1];
-            double area = (y[i] + y[i-1]) / 2.0 * dx; 
-            integral += area;
-        }
-        integrals.push_back(integral); 
+        //Calculate Integral of the Graph:
+        integrals.push_back(graph->Integral(0,no_of_datas)); 
     }
-
+    //Print Results
     cout << "\n\n\n";
-    cout << "  Graph     Integrals (Wb)      Peaks (V)      Time (s)" << "\n"
+    cout << "  Graph     Integrals (Wb)      Peaks (V)      Time (s)    RiseTime(s)    FallTime(s)" << "\n"
         << "--------------------------------------------------------" << endl;
     for(int i = 0; i < no_of_datasets; i++){
     cout << setw(4) << i+1 << "       " << setw(12) << integrals[i] << "       " << setw(9) << peak_voltages[i] 
-    << "       "<< setw(6) << peak_time[i] << endl;
+    << "       "<< setw(6) << peak_time[i] << "       " << setw(12) << risetime[i] << "       " << setw(12)<< falltime[i]<< endl;
     }
+
 }
 
 
